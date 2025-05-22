@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
-    "build": "tsx lib/db/migrate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint && biome lint --write --unsafe",
     "lint:fix": "next lint --fix && biome lint --write --unsafe",
@@ -16,7 +16,9 @@
     "db:pull": "drizzle-kit pull",
     "db:check": "drizzle-kit check",
     "db:up": "drizzle-kit up",
-    "test": "export PLAYWRIGHT=True && pnpm exec playwright test"
+    "test": "export PLAYWRIGHT=True && pnpm exec playwright test",
+    "docker:build": "docker build -t docker.metroid.net.au/metroidchatapp:latest .",
+    "docker:publish": "docker build -t docker.metroid.net.au/metroidchatapp:latest . && docker push docker.metroid.net.au/metroidchatapp:latest"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.11",
