@@ -4,6 +4,7 @@ import {
   createDataStream,
   smoothStream,
   streamText,
+  tool,
 } from "ai";
 import { auth, type UserType } from "@/app/(auth)/auth";
 import { type RequestHints, systemPrompt } from "@/lib/ai/prompts";
@@ -36,6 +37,9 @@ import { after } from "next/server";
 import type { Chat } from "@/lib/db/schema";
 import { differenceInSeconds } from "date-fns";
 import { ChatSDKError } from "@/lib/errors";
+import { createResourceAndEmbedding } from "@/lib/actions/resources";
+import { z } from "zod";
+import { findRelevantContent } from "@/lib/ai/embedding";
 
 export const maxDuration = 60;
 
@@ -82,7 +86,7 @@ export async function POST(request: Request) {
       return new ChatSDKError("unauthorized:chat").toResponse();
     }
 
-    const userType: UserType = session.user.type ?? "regular";
+    const userType: UserType = session.user.type;
 
     const messageCount = await getMessageCountByUserId({
       id: session.user.id,
@@ -160,6 +164,8 @@ export async function POST(request: Request) {
                   "createDocument",
                   "updateDocument",
                   "requestSuggestions",
+                  "addResource",
+                  "findRelevantContent",
                 ],
           experimental_transform: smoothStream({ chunking: "word" }),
           experimental_generateMessageId: generateUUID,
@@ -170,6 +176,30 @@ export async function POST(request: Request) {
             requestSuggestions: requestSuggestions({
               session,
               dataStream,
+            }),
+            addResource: tool({
+              description:
+                "add a resource to your knowledge base. If the user provides a random piece of knowledge unprompted, use this tool without asking for confirmation.",
+              parameters: z.object({
+                content: z
+                  .string()
+                  .describe(
+                    "The content of the resource to add to the knowledge base"
+                  ),
+              }),
+              execute: async ({ content }) => {
+                return await createResourceAndEmbedding({ content });
+              },
+            }),
+            findRelevantContent: tool({
+              description:
+                "get information from your knowledge base to answer questions.",
+              parameters: z.object({
+                content: z.string().describe("The user's question"),
+              }),
+              execute: async ({ content }) => {
+                return await findRelevantContent(content);
+              },
             }),
           },
           onFinish: async ({ response }) => {

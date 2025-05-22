@@ -3,6 +3,7 @@ import "server-only";
 import {
   and,
   asc,
+  cosineDistance,
   count,
   desc,
   eq,
@@ -10,6 +11,7 @@ import {
   gte,
   inArray,
   lt,
+  sql,
   type SQL,
 } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
@@ -27,6 +29,9 @@ import {
   type DBMessage,
   type Chat,
   stream,
+  resources,
+  embeddings as embeddingsTable,
+  embeddings,
 } from "./schema";
 import type { ArtifactKind } from "@/components/artifact";
 import { generateUUID } from "../utils";
@@ -537,6 +542,72 @@ export async function getStreamIdsByChatId({ chatId }: { chatId: string }) {
     throw new ChatSDKError(
       "bad_request:database",
       "Failed to get stream ids by chat id"
+    );
+  }
+}
+
+export async function createResource({ content }: { content: string }) {
+  try {
+    return await db
+      .insert(resources)
+      .values({ content, createdAt: new Date(), updatedAt: new Date() })
+      .returning();
+  } catch (error) {
+    throw new ChatSDKError("bad_request:database", "Failed to create resource");
+  }
+}
+
+export async function createEmbeddings(
+  embeddings: {
+    resourceId: string;
+    content: string;
+    embedding: number[];
+  }[]
+) {
+  try {
+    // check if the resource already exists
+    const existingResource = await db
+      .select()
+      .from(resources)
+      .where(eq(resources.content, embeddings[0].content))
+      .limit(1);
+
+    if (existingResource.length > 0) {
+      return existingResource[0].id;
+    }
+
+    return await db.insert(embeddingsTable).values(embeddings);
+  } catch (error) {
+    throw new ChatSDKError(
+      "bad_request:database",
+      "Failed to create embedding"
+    );
+  }
+}
+
+export async function getRelevantResources(
+  embedding: number[],
+  threshold: number,
+  count: number
+) {
+  try {
+    const similarity = sql<number>`1 - (${cosineDistance(
+      embeddings.embedding,
+      embedding
+    )})`;
+    return await db
+      .select({
+        name: embeddings.content,
+        similarity,
+      })
+      .from(embeddings)
+      .where(gt(similarity, threshold))
+      .orderBy(desc(similarity))
+      .limit(count);
+  } catch (error) {
+    throw new ChatSDKError(
+      "bad_request:database",
+      "Failed to get relevant resources"
     );
   }
 }
