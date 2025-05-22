@@ -31,6 +31,7 @@ export const myProvider = isTestEnvironment
         }),
         "title-model": openai("gpt-4o-mini"),
         "artifact-model": openai("gpt-4o"),
+        // "peter-the-punkin-eater": openai("gpt-4o"),
       },
       // imageModels: {
       //   "small-model": openai("gpt-4o"),

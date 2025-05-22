@@ -110,7 +110,6 @@ export const {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      console.log(`jwt started with token ${token.id}`);
       if (user) {
         // Use the database ID from the custom field
         token.id = user.dbId as string;
@@ -119,7 +118,6 @@ export const {
       return token;
     },
     async session({ session, token }) {
-      console.log(`session started with token ${token.id}`);
       if (session.user) {
         session.user.id = token.id;
         session.user.type = token.type;
