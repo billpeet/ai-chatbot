@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   output: "standalone",
   experimental: {
     ppr: true,
+    serverComponentsExternalPackages: ["pdf-parse"],
   },
   images: {
     remotePatterns: [

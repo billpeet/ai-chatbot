@@ -33,10 +33,10 @@ import {
   embeddings as embeddingsTable,
   embeddings,
 } from "./schema";
-import type { ArtifactKind } from "@/components/artifact";
+import type { ArtifactKind } from "@/components/chat/artifacts/artifact";
 import { generateUUID } from "../utils";
 import { generateHashedPassword } from "./utils";
-import type { VisibilityType } from "@/components/visibility-selector";
+import type { VisibilityType } from "@/components/chat/visibility-selector";
 import { ChatSDKError } from "../errors";
 
 // Optionally, if not using email/pass login, you can
@@ -65,23 +65,6 @@ export async function createUser(email: string, password: string) {
     return await db.insert(user).values({ email, password: hashedPassword });
   } catch (error) {
     throw new ChatSDKError("bad_request:database", "Failed to create user");
-  }
-}
-
-export async function createGuestUser() {
-  const email = `guest-${Date.now()}`;
-  const password = generateHashedPassword(generateUUID());
-
-  try {
-    return await db.insert(user).values({ email, password }).returning({
-      id: user.id,
-      email: user.email,
-    });
-  } catch (error) {
-    throw new ChatSDKError(
-      "bad_request:database",
-      "Failed to create guest user"
-    );
   }
 }
 
@@ -546,13 +529,46 @@ export async function getStreamIdsByChatId({ chatId }: { chatId: string }) {
   }
 }
 
-export async function createResource({ content }: { content: string }) {
+export async function createResource({
+  content,
+  contentSummary,
+  name,
+  url,
+  contentType,
+  type,
+  size,
+  createdBy,
+  updatedBy,
+}: {
+  content: string;
+  contentSummary: string;
+  name: string;
+  url?: string;
+  contentType: string;
+  type: string;
+  size: number;
+  createdBy: string;
+  updatedBy: string;
+}) {
   try {
     return await db
       .insert(resources)
-      .values({ content, createdAt: new Date(), updatedAt: new Date() })
+      .values({
+        content,
+        contentSummary,
+        name,
+        url,
+        contentType,
+        type,
+        size,
+        createdBy,
+        updatedBy,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
       .returning();
   } catch (error) {
+    console.error(error);
     throw new ChatSDKError("bad_request:database", "Failed to create resource");
   }
 }
@@ -609,5 +625,62 @@ export async function getRelevantResources(
       "bad_request:database",
       "Failed to get relevant resources"
     );
+  }
+}
+
+export async function getResources(pageNo: number, pageSize: number) {
+  try {
+    const items = await db
+      .select()
+      .from(resources)
+      .limit(pageSize)
+      .offset((pageNo - 1) * pageSize);
+    return items;
+  } catch (error) {
+    throw new ChatSDKError("bad_request:database", "Failed to get resources");
+  }
+}
+
+export async function getResourceById(id: string) {
+  try {
+    return await db.select().from(resources).where(eq(resources.id, id));
+  } catch (error) {
+    throw new ChatSDKError(
+      "bad_request:database",
+      "Failed to get resource by id"
+    );
+  }
+}
+
+export async function deleteResource(id: string) {
+  try {
+    return await db.delete(resources).where(eq(resources.id, id));
+  } catch (error) {
+    throw new ChatSDKError("bad_request:database", "Failed to delete resource");
+  }
+}
+
+export async function getVotes(pageNo: number, pageSize: number) {
+  try {
+    const items = await db
+      .select({
+        messageId: vote.messageId,
+        parts: message.parts,
+        chatId: vote.chatId,
+        chatTitle: chat.title,
+        userId: user.id,
+        userEmail: user.email,
+        isUpvoted: vote.isUpvoted,
+      })
+      .from(vote)
+      .innerJoin(message, eq(vote.messageId, message.id))
+      .innerJoin(chat, eq(message.chatId, chat.id))
+      .innerJoin(user, eq(chat.userId, user.id))
+      .limit(pageSize)
+      .offset((pageNo - 1) * pageSize)
+      .orderBy(desc(message.createdAt));
+    return items;
+  } catch (error) {
+    throw new ChatSDKError("bad_request:database", "Failed to get votes");
   }
 }

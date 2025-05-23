@@ -1,13 +1,10 @@
-import { compare } from "bcrypt-ts";
 import NextAuth, { type DefaultSession } from "next-auth";
-import Credentials from "next-auth/providers/credentials";
 import EntraIdProvider from "next-auth/providers/microsoft-entra-id";
-import { createGuestUser, getUser, createUser } from "@/lib/db/queries";
+import { getUser, createUser } from "@/lib/db/queries";
 import { authConfig } from "./auth.config";
-import { DUMMY_PASSWORD } from "@/lib/constants";
 import type { DefaultJWT } from "next-auth/jwt";
 
-export type UserType = "guest" | "regular";
+export type UserType = "user" | "admin";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -51,6 +48,7 @@ export const {
         // Check if user exists
         const users = await getUser(profile.email);
         let userId;
+        let userType: UserType;
 
         // If user doesn't exist, create one
         if (users.length === 0) {
@@ -59,8 +57,10 @@ export const {
           // Get the newly created user to get their ID
           const [newUser] = await getUser(profile.email);
           userId = newUser.id;
+          userType = "user";
         } else {
           userId = users[0].id;
+          userType = users[0].type;
         }
 
         console.log(`profile has id ${userId}`);
@@ -69,42 +69,10 @@ export const {
           id: userId,
           email: profile.email,
           name: profile.name,
-          type: "regular",
+          type: userType,
           sub: profile.sub, // Store the original sub
           dbId: userId, // Store the database ID in a custom field
         };
-      },
-    }),
-    Credentials({
-      credentials: {},
-      async authorize({ email, password }: any) {
-        const users = await getUser(email);
-
-        if (users.length === 0) {
-          await compare(password, DUMMY_PASSWORD);
-          return null;
-        }
-
-        const [user] = users;
-
-        if (!user.password) {
-          await compare(password, DUMMY_PASSWORD);
-          return null;
-        }
-
-        const passwordsMatch = await compare(password, user.password);
-
-        if (!passwordsMatch) return null;
-
-        return { ...user, type: "regular" };
-      },
-    }),
-    Credentials({
-      id: "guest",
-      credentials: {},
-      async authorize() {
-        const [guestUser] = await createGuestUser();
-        return { ...guestUser, type: "guest" };
       },
     }),
   ],

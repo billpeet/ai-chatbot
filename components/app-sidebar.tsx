@@ -4,8 +4,8 @@ import type { User } from "next-auth";
 import { useRouter } from "next/navigation";
 
 import { PlusIcon } from "@/components/icons";
-import { SidebarHistory } from "@/components/sidebar-history";
-import { SidebarUserNav } from "@/components/sidebar-user-nav";
+import { SidebarHistory } from "@/components/chat/sidebar/sidebar-history";
+import { SidebarUserNav } from "@/components/chat/sidebar/sidebar-user-nav";
 import { Button } from "@/components/ui/button";
 import {
   Sidebar,
@@ -18,7 +18,7 @@ import {
 import Link from "next/link";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
-export function AppSidebar({ user }: { user: User | undefined }) {
+export function AppSidebar({ user }: { user: User }) {
   const router = useRouter();
   const { setOpenMobile } = useSidebar();
 
@@ -38,25 +38,23 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                 Metroid Assistant
               </span>
             </Link>
-            {user && user.type !== "guest" && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    type="button"
-                    className="p-2 h-fit"
-                    onClick={() => {
-                      setOpenMobile(false);
-                      router.push("/");
-                      router.refresh();
-                    }}
-                  >
-                    <PlusIcon />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent align="end">New Chat</TooltipContent>
-              </Tooltip>
-            )}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  type="button"
+                  className="p-2 h-fit"
+                  onClick={() => {
+                    setOpenMobile(false);
+                    router.push("/");
+                    router.refresh();
+                  }}
+                >
+                  <PlusIcon />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent align="end">New Chat</TooltipContent>
+            </Tooltip>
           </div>
         </SidebarMenu>
       </SidebarHeader>
@@ -64,7 +62,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
         <SidebarHistory user={user} />
       </SidebarContent>
       <SidebarFooter>
-        {user && user.type !== "guest" && <SidebarUserNav user={user} />}
+        <SidebarUserNav user={user} />
       </SidebarFooter>
     </Sidebar>
   );

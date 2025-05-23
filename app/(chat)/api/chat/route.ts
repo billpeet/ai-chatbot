@@ -6,13 +6,12 @@ import {
   streamText,
   tool,
 } from "ai";
-import { auth, type UserType } from "@/app/(auth)/auth";
+import { auth } from "@/app/(auth)/auth";
 import { type RequestHints, systemPrompt } from "@/lib/ai/prompts";
 import {
   createStreamId,
   deleteChatById,
   getChatById,
-  getMessageCountByUserId,
   getMessagesByChatId,
   getStreamIdsByChatId,
   saveChat,
@@ -26,7 +25,6 @@ import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
 import { getWeather } from "@/lib/ai/tools/get-weather";
 import { isProductionEnvironment } from "@/lib/constants";
 import { myProvider } from "@/lib/ai/providers";
-import { entitlementsByUserType } from "@/lib/ai/entitlements";
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
 import { geolocation } from "@vercel/functions";
 import {
@@ -37,7 +35,6 @@ import { after } from "next/server";
 import type { Chat } from "@/lib/db/schema";
 import { differenceInSeconds } from "date-fns";
 import { ChatSDKError } from "@/lib/errors";
-import { createResourceAndEmbedding } from "@/lib/actions/resources";
 import { z } from "zod";
 import { findRelevantContent } from "@/lib/ai/embedding";
 
@@ -86,16 +83,14 @@ export async function POST(request: Request) {
       return new ChatSDKError("unauthorized:chat").toResponse();
     }
 
-    const userType: UserType = session.user.type;
-
-    const messageCount = await getMessageCountByUserId({
-      id: session.user.id,
-      differenceInHours: 24,
-    });
-
-    if (messageCount > entitlementsByUserType[userType].maxMessagesPerDay) {
-      return new ChatSDKError("rate_limit:chat").toResponse();
-    }
+    // const messageCount = await getMessageCountByUserId({
+    //   id: session.user.id,
+    //   differenceInHours: 24,
+    // });
+    // TODO: could have a limit on the number of messages per day
+    // if (messageCount > entitlementsByUserType[userType].maxMessagesPerDay) {
+    //   return new ChatSDKError("rate_limit:chat").toResponse();
+    // }
 
     const chat = await getChatById({ id });
 
@@ -164,8 +159,7 @@ export async function POST(request: Request) {
                   "createDocument",
                   "updateDocument",
                   "requestSuggestions",
-                  "addResource",
-                  "findRelevantContent",
+                  "searchKnowledgeBase",
                 ],
           experimental_transform: smoothStream({ chunking: "word" }),
           experimental_generateMessageId: generateUUID,
@@ -177,21 +171,7 @@ export async function POST(request: Request) {
               session,
               dataStream,
             }),
-            addResource: tool({
-              description:
-                "add a resource to your knowledge base. If the user provides a random piece of knowledge unprompted, use this tool without asking for confirmation.",
-              parameters: z.object({
-                content: z
-                  .string()
-                  .describe(
-                    "The content of the resource to add to the knowledge base"
-                  ),
-              }),
-              execute: async ({ content }) => {
-                return await createResourceAndEmbedding({ content });
-              },
-            }),
-            findRelevantContent: tool({
+            searchKnowledgeBase: tool({
               description:
                 "get information from your knowledge base to answer questions.",
               parameters: z.object({

@@ -1,6 +1,12 @@
-import { embed, embedMany } from "ai";
+import { embed, embedMany, generateText } from "ai";
 import { openai } from "@ai-sdk/openai";
-import { getRelevantResources } from "../db/queries";
+import {
+  createEmbeddings,
+  createResource,
+  getRelevantResources,
+} from "../db/queries";
+import { z } from "zod";
+import { myProvider } from "./providers";
 
 const embeddingModel = openai.embedding("text-embedding-ada-002");
 
@@ -42,3 +48,66 @@ export const findRelevantContent = async (userQuery: string) => {
 
   return results;
 };
+
+const insertResourceSchema = z.object({
+  content: z
+    .string()
+    .describe("The content of the resource to add to the knowledge base"),
+  name: z.string().describe("The name of the resource"),
+  url: z.string().describe("The url of the resource").optional(),
+  type: z.string().describe("The type of the resource"),
+  contentType: z.string().describe("The content type of the resource"),
+  createdBy: z.string().describe("The user who created the resource"),
+  updatedBy: z.string().describe("The user who updated the resource"),
+});
+
+export type NewResourceParams = z.infer<typeof insertResourceSchema>;
+
+export const createResourceAndEmbedding = async (input: NewResourceParams) => {
+  try {
+    const { content, name, url, contentType, type, createdBy, updatedBy } =
+      insertResourceSchema.parse(input);
+
+    const contentSummary = await generateContentSummary(content);
+
+    const [resource] = await createResource({
+      content,
+      contentSummary,
+      name,
+      contentType,
+      url,
+      type,
+      size: content.length,
+      createdBy,
+      updatedBy,
+    });
+
+    const embeddings = await generateEmbeddings(content);
+
+    await createEmbeddings(
+      embeddings.map((embedding) => ({
+        resourceId: resource.id,
+        ...embedding,
+      }))
+    );
+
+    return "Resource successfully created and embedded.";
+  } catch (error) {
+    return error instanceof Error && error.message.length > 0
+      ? error.message
+      : "Error, please try again.";
+  }
+};
+
+async function generateContentSummary(content: string) {
+  const { text: contentSummary } = await generateText({
+    model: myProvider.languageModel("title-model"),
+    system: `\n
+    - you will generate a short summary of the content
+    - ensure it is not more than 100 characters long
+    - do not use quotes or colons`,
+    prompt: content,
+  });
+
+  return contentSummary;
+}

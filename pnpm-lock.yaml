@@ -51,7 +51,7 @@ importers:
         specifier: ^1.1.2
         version: 1.1.6(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)
       '@radix-ui/react-dialog':
-        specifier: ^1.1.2
+        specifier: ^1.1.6
         version: 1.1.6(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)
       '@radix-ui/react-dropdown-menu':
         specifier: ^2.1.2
@@ -77,6 +77,27 @@ importers:
       '@radix-ui/react-visually-hidden':
         specifier: ^1.1.0
         version: 1.1.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)
+      '@tanstack/react-query':
+        specifier: ^5.76.2
+        version: 5.76.2(react@19.0.0-rc-45804af1-20241021)
+      '@tanstack/react-table':
+        specifier: ^8.21.3
+        version: 8.21.3(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)
+      '@trpc/client':
+        specifier: ^11.1.2
+        version: 11.1.2(@trpc/server@11.1.2(typescript@5.8.2))(typescript@5.8.2)
+      '@trpc/next':
+        specifier: ^11.1.2
+        version: 11.1.2(@tanstack/react-query@5.76.2(react@19.0.0-rc-45804af1-20241021))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.2))(typescript@5.8.2))(@trpc/react-query@11.1.2(@tanstack/react-query@5.76.2(react@19.0.0-rc-45804af1-20241021))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.2))(typescript@5.8.2))(@trpc/server@11.1.2(typescript@5.8.2))(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)(typescript@5.8.2))(@trpc/server@11.1.2(typescript@5.8.2))(next@15.3.0-canary.31(@opentelemetry/api@1.9.0)(@playwright/test@1.51.0)(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021))(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)(typescript@5.8.2)
+      '@trpc/react-query':
+        specifier: ^11.1.2
+        version: 11.1.2(@tanstack/react-query@5.76.2(react@19.0.0-rc-45804af1-20241021))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.2))(typescript@5.8.2))(@trpc/server@11.1.2(typescript@5.8.2))(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)(typescript@5.8.2)
+      '@trpc/server':
+        specifier: ^11.1.2
+        version: 11.1.2(typescript@5.8.2)
+      '@trpc/tanstack-react-query':
+        specifier: ^11.1.2
+        version: 11.1.2(@tanstack/react-query@5.76.2(react@19.0.0-rc-45804af1-20241021))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.2))(typescript@5.8.2))(@trpc/server@11.1.2(typescript@5.8.2))(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)(typescript@5.8.2)
       '@vercel/analytics':
         specifier: ^1.3.1
         version: 1.5.0(next@15.3.0-canary.31(@opentelemetry/api@1.9.0)(@playwright/test@1.51.0)(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)
@@ -104,6 +125,9 @@ importers:
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
+      client-only:
+        specifier: ^0.0.1
+        version: 0.0.1
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -152,6 +176,9 @@ importers:
       papaparse:
         specifier: ^5.5.2
         version: 5.5.2
+      pdf-parse:
+        specifier: ^1.1.1
+        version: 1.1.1
       postgres:
         specifier: ^3.4.4
         version: 3.4.5
@@ -188,6 +215,9 @@ importers:
       react-dom:
         specifier: 19.0.0-rc-45804af1-20241021
         version: 19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021)
+      react-error-boundary:
+        specifier: ^6.0.0
+        version: 6.0.0(react@19.0.0-rc-45804af1-20241021)
       react-markdown:
         specifier: ^9.0.1
         version: 9.1.0(@types/react@18.3.18)(react@19.0.0-rc-45804af1-20241021)
@@ -209,6 +239,9 @@ importers:
       sonner:
         specifier: ^1.5.0
         version: 1.7.4(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)
+      superjson:
+        specifier: ^2.2.2
+        version: 2.2.2
       swr:
         specifier: ^2.2.5
         version: 2.3.3(react@19.0.0-rc-45804af1-20241021)
@@ -370,6 +403,10 @@ packages:
         optional: true
       nodemailer:
         optional: true
+
+  '@babel/runtime@7.27.1':
+    resolution: {integrity: sha512-1x3D2xEk2fRo3PAhwQwu5UubzgiVWSXTBfWpVd2Mx2AzRqJuDJCsgaDVZ7HB5iGzDW1Hl1sWN2mFyKjmR9uAog==}
+    engines: {node: '>=6.9.0'}
 
   '@biomejs/biome@1.9.4':
     resolution: {integrity: sha512-1rkd7G70+o9KkTn5KLmDYXihGoTaIGO9PIIN2ZB7UJxFrWw04CZHPYiMRjYsaDvVV7hP1dYNRLxSANLaBFGpog==}
@@ -1614,6 +1651,73 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders || >=4.0.0-alpha.20 || >=4.0.0-beta.1'
 
+  '@tanstack/query-core@5.76.2':
+    resolution: {integrity: sha512-PFGwWh5ss9cJQ67l6bZ7hqXbisX2gy13G2jP+VGY1bgdbCfOMWh6UBVnN62QbFXro6CCoX9hYzTnZHr6Rz00YQ==}
+
+  '@tanstack/react-query@5.76.2':
+    resolution: {integrity: sha512-rGkWberCrFdIxMdvSAJM/UOKeu0O/JVTbMmfhQoJpiU9Uq0EDx2EMCadnNuJWbXR4smDA2t7DY3NKkYFmDVS5A==}
+    peerDependencies:
+      react: ^18 || ^19
+
+  '@tanstack/react-table@8.21.3':
+    resolution: {integrity: sha512-5nNMTSETP4ykGegmVkhjcS8tTLW6Vl4axfEGQN3v0zdHYbK4UfoqfPChclTrJ4EoK9QynqAu9oUf8VEmrpZ5Ww==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+
+  '@tanstack/table-core@8.21.3':
+    resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
+    engines: {node: '>=12'}
+
+  '@trpc/client@11.1.2':
+    resolution: {integrity: sha512-RpifJOAv+ql9gF3oafa3dLCF01AzWu2DzejvehAPG2IlwHxopKoYXaImJ8zPwRkZokuWiKz5v65HjElmi8TlrQ==}
+    peerDependencies:
+      '@trpc/server': 11.1.2
+      typescript: '>=5.7.2'
+
+  '@trpc/next@11.1.2':
+    resolution: {integrity: sha512-dtk8p/al4p5BU4Otol8ufM3sjuJT/1do0wR912OjetRLwG0Y41FTwhUeXcfLpUMjWUWy+dnCwG8aH/sDvLO5RQ==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.59.15
+      '@trpc/client': 11.1.2
+      '@trpc/react-query': 11.1.2
+      '@trpc/server': 11.1.2
+      next: '*'
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+      typescript: '>=5.7.2'
+    peerDependenciesMeta:
+      '@tanstack/react-query':
+        optional: true
+      '@trpc/react-query':
+        optional: true
+
+  '@trpc/react-query@11.1.2':
+    resolution: {integrity: sha512-Ws3oIaj0qqbVIUyfYd9uFBwqk7eRqsxaLhLKN7grskoBo8wkh/CUADcN6ZD+GGogC3Dsg9S4WhgU1jVgfc/ahg==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.67.1
+      '@trpc/client': 11.1.2
+      '@trpc/server': 11.1.2
+      react: '>=18.2.0'
+      react-dom: '>=18.2.0'
+      typescript: '>=5.7.2'
+
+  '@trpc/server@11.1.2':
+    resolution: {integrity: sha512-Oi9zWHG0ZDkbDo4sYkduoV7q4sIe6UwjrRLC91vNMYQK+PVgpbTCmK1laRwewAGu0zaayqcGDosANjceOIC3GA==}
+    peerDependencies:
+      typescript: '>=5.7.2'
+
+  '@trpc/tanstack-react-query@11.1.2':
+    resolution: {integrity: sha512-c+NupnmIQmwgwYVTaHgDg59BZBtJ6KxqB0cxF9FBhKHPY6PlwGLdU8+mo25C5VIpofZYEII4H7NKE4yKGFSe3w==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.67.1
+      '@trpc/client': 11.1.2
+      '@trpc/server': 11.1.2
+      react: '>=18.2.0'
+      react-dom: '>=18.2.0'
+      typescript: '>=5.7.2'
+
   '@types/cookie@0.6.0':
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
 
@@ -2041,6 +2145,10 @@ packages:
   cookie@0.7.1:
     resolution: {integrity: sha512-6DnInpx7SJ2AK3+CTUE/ZM0vWTUboZCegxhC2xiIydHR9jNuTAASBrfEpHhiGOZw/nX51bHt6YQl8jsGo4y/0w==}
     engines: {node: '>= 0.6'}
+
+  copy-anything@3.0.5:
+    resolution: {integrity: sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==}
+    engines: {node: '>=12.13'}
 
   crelt@1.0.6:
     resolution: {integrity: sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g==}
@@ -2827,6 +2935,10 @@ packages:
     resolution: {integrity: sha512-mfcwb6IzQyOKTs84CQMrOwW4gQcaTOAWJ0zzJCl2WSPDrWk/OzDaImWFH3djXhb24g4eudZfLRozAvPGw4d9hQ==}
     engines: {node: '>= 0.4'}
 
+  is-what@4.1.16:
+    resolution: {integrity: sha512-ZhMwEosbFJkA0YhFnNDgTM4ZxDRsS6HqTo7qsZM08fehyRYIYa0yHu5R6mgo1n/8MgaPBXiPimPD77baVFYg+A==}
+    engines: {node: '>=12.13'}
+
   isarray@2.0.5:
     resolution: {integrity: sha512-xHjhDr3cNBK0BzdUJSPXZntQUx/mwMS5Rw4A7lPJ90XGAO6ISP/ePDNuo0vhqOZU+UD5JoodwCAAoZQd3FeAKw==}
 
@@ -3189,6 +3301,9 @@ packages:
       sass:
         optional: true
 
+  node-ensure@0.0.0:
+    resolution: {integrity: sha512-DRI60hzo2oKN1ma0ckc6nQWlHU69RH6xN0sjQTjMpChPfTYvKZdcQFfdYK2RWbJcKyUizSIy/l8OTGxMAM1QDw==}
+
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
     engines: {node: 4.x || >=6.0.0}
@@ -3305,6 +3420,10 @@ packages:
   path-type@4.0.0:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
+
+  pdf-parse@1.1.1:
+    resolution: {integrity: sha512-v6ZJ/efsBpGrGGknjtq9J/oC8tZWq0KWL5vQrk2GlzLEQPUDB1ex+13Rmidl1neNN358Jn9EHZw5y07FFtaC7A==}
+    engines: {node: '>=6.8.1'}
 
   pg-int8@1.0.1:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
@@ -3513,6 +3632,11 @@ packages:
     resolution: {integrity: sha512-8hOckEFO7Vxo+nH/EEddIGdencOFT0/3iJqF3mKrqv71n1xxhYcp0595JbT/DP31G8bHfDcBSMWVhIvyCGWy/A==}
     peerDependencies:
       react: 19.0.0-rc-45804af1-20241021
+
+  react-error-boundary@6.0.0:
+    resolution: {integrity: sha512-gdlJjD7NWr0IfkPlaREN2d9uUZUlksrfOx7SX62VRerwXbMY6ftGCIZua1VG1aXFNOimhISsTq+Owp725b9SiA==}
+    peerDependencies:
+      react: '>=16.13.1'
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -3819,6 +3943,10 @@ packages:
     resolution: {integrity: sha512-8EbVDiu9iN/nESwxeSxDKe0dunta1GOlHufmSSXxMD2z2/tMZpDMpvXQGsc+ajGo8y2uYUmixaSRUc/QPoQ0GA==}
     engines: {node: '>=16 || 14 >=14.17'}
     hasBin: true
+
+  superjson@2.2.2:
+    resolution: {integrity: sha512-5JRxVqC8I8NuOUjzBbvVJAKNM8qoVuH0O77h4WInc/qC2q5IreqKxYwgkga3PfA22OayK2ikceb/B26dztPl+Q==}
+    engines: {node: '>=16'}
 
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
@@ -4177,6 +4305,8 @@ snapshots:
       oauth4webapi: 3.3.1
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
+
+  '@babel/runtime@7.27.1': {}
 
   '@biomejs/biome@1.9.4':
     optionalDependencies:
@@ -5172,6 +5302,60 @@ snapshots:
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.17
 
+  '@tanstack/query-core@5.76.2': {}
+
+  '@tanstack/react-query@5.76.2(react@19.0.0-rc-45804af1-20241021)':
+    dependencies:
+      '@tanstack/query-core': 5.76.2
+      react: 19.0.0-rc-45804af1-20241021
+
+  '@tanstack/react-table@8.21.3(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)':
+    dependencies:
+      '@tanstack/table-core': 8.21.3
+      react: 19.0.0-rc-45804af1-20241021
+      react-dom: 19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021)
+
+  '@tanstack/table-core@8.21.3': {}
+
+  '@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.2))(typescript@5.8.2)':
+    dependencies:
+      '@trpc/server': 11.1.2(typescript@5.8.2)
+      typescript: 5.8.2
+
+  '@trpc/next@11.1.2(@tanstack/react-query@5.76.2(react@19.0.0-rc-45804af1-20241021))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.2))(typescript@5.8.2))(@trpc/react-query@11.1.2(@tanstack/react-query@5.76.2(react@19.0.0-rc-45804af1-20241021))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.2))(typescript@5.8.2))(@trpc/server@11.1.2(typescript@5.8.2))(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)(typescript@5.8.2))(@trpc/server@11.1.2(typescript@5.8.2))(next@15.3.0-canary.31(@opentelemetry/api@1.9.0)(@playwright/test@1.51.0)(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021))(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)(typescript@5.8.2)':
+    dependencies:
+      '@trpc/client': 11.1.2(@trpc/server@11.1.2(typescript@5.8.2))(typescript@5.8.2)
+      '@trpc/server': 11.1.2(typescript@5.8.2)
+      next: 15.3.0-canary.31(@opentelemetry/api@1.9.0)(@playwright/test@1.51.0)(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)
+      react: 19.0.0-rc-45804af1-20241021
+      react-dom: 19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021)
+      typescript: 5.8.2
+    optionalDependencies:
+      '@tanstack/react-query': 5.76.2(react@19.0.0-rc-45804af1-20241021)
+      '@trpc/react-query': 11.1.2(@tanstack/react-query@5.76.2(react@19.0.0-rc-45804af1-20241021))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.2))(typescript@5.8.2))(@trpc/server@11.1.2(typescript@5.8.2))(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)(typescript@5.8.2)
+
+  '@trpc/react-query@11.1.2(@tanstack/react-query@5.76.2(react@19.0.0-rc-45804af1-20241021))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.2))(typescript@5.8.2))(@trpc/server@11.1.2(typescript@5.8.2))(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)(typescript@5.8.2)':
+    dependencies:
+      '@tanstack/react-query': 5.76.2(react@19.0.0-rc-45804af1-20241021)
+      '@trpc/client': 11.1.2(@trpc/server@11.1.2(typescript@5.8.2))(typescript@5.8.2)
+      '@trpc/server': 11.1.2(typescript@5.8.2)
+      react: 19.0.0-rc-45804af1-20241021
+      react-dom: 19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021)
+      typescript: 5.8.2
+
+  '@trpc/server@11.1.2(typescript@5.8.2)':
+    dependencies:
+      typescript: 5.8.2
+
+  '@trpc/tanstack-react-query@11.1.2(@tanstack/react-query@5.76.2(react@19.0.0-rc-45804af1-20241021))(@trpc/client@11.1.2(@trpc/server@11.1.2(typescript@5.8.2))(typescript@5.8.2))(@trpc/server@11.1.2(typescript@5.8.2))(react-dom@19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021))(react@19.0.0-rc-45804af1-20241021)(typescript@5.8.2)':
+    dependencies:
+      '@tanstack/react-query': 5.76.2(react@19.0.0-rc-45804af1-20241021)
+      '@trpc/client': 11.1.2(@trpc/server@11.1.2(typescript@5.8.2))(typescript@5.8.2)
+      '@trpc/server': 11.1.2(typescript@5.8.2)
+      react: 19.0.0-rc-45804af1-20241021
+      react-dom: 19.0.0-rc-45804af1-20241021(react@19.0.0-rc-45804af1-20241021)
+      typescript: 5.8.2
+
   '@types/cookie@0.6.0': {}
 
   '@types/d3-scale@4.0.9':
@@ -5591,6 +5775,10 @@ snapshots:
   concat-map@0.0.1: {}
 
   cookie@0.7.1: {}
+
+  copy-anything@3.0.5:
+    dependencies:
+      is-what: 4.1.16
 
   crelt@1.0.6: {}
 
@@ -6554,6 +6742,8 @@ snapshots:
       call-bound: 1.0.4
       get-intrinsic: 1.3.0
 
+  is-what@4.1.16: {}
+
   isarray@2.0.5: {}
 
   isexe@2.0.0: {}
@@ -7118,6 +7308,8 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
+  node-ensure@0.0.0: {}
+
   node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
@@ -7234,6 +7426,13 @@ snapshots:
       minipass: 7.1.2
 
   path-type@4.0.0: {}
+
+  pdf-parse@1.1.1:
+    dependencies:
+      debug: 3.2.7
+      node-ensure: 0.0.0
+    transitivePeerDependencies:
+      - supports-color
 
   pg-int8@1.0.1: {}
 
@@ -7459,6 +7658,11 @@ snapshots:
     dependencies:
       react: 19.0.0-rc-45804af1-20241021
       scheduler: 0.25.0-rc-45804af1-20241021
+
+  react-error-boundary@6.0.0(react@19.0.0-rc-45804af1-20241021):
+    dependencies:
+      '@babel/runtime': 7.27.1
+      react: 19.0.0-rc-45804af1-20241021
 
   react-is@16.13.1: {}
 
@@ -7862,6 +8066,10 @@ snapshots:
       mz: 2.7.0
       pirates: 4.0.6
       ts-interface-checker: 0.1.13
+
+  superjson@2.2.2:
+    dependencies:
+      copy-anything: 3.0.5
 
   supports-color@7.2.0:
     dependencies:

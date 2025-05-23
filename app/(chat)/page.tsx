@@ -1,36 +1,30 @@
-import { cookies } from 'next/headers';
+import { cookies } from "next/headers";
 
-import { Chat } from '@/components/chat';
-import { NoLogin } from '@/components/no-login';
+import { Chat } from "@/components/chat/chat";
+import { NoLogin } from "@/components/no-login";
 
-import { DEFAULT_CHAT_MODEL } from '@/lib/ai/models';
-import { generateUUID } from '@/lib/utils';
-import { DataStreamHandler } from '@/components/data-stream-handler';
-import { auth } from '../(auth)/auth';
-import { redirect } from 'next/navigation';
+import { DEFAULT_CHAT_MODEL } from "@/lib/ai/models";
+import { generateUUID } from "@/lib/utils";
+import { DataStreamHandler } from "@/components/data-stream-handler";
+import { auth } from "../(auth)/auth";
 
 export default async function Page() {
   const session = await auth();
-
   if (!session) {
-    redirect('/auth/guest');
-  }
-
-  if (session.user.type === 'guest') {
     return <NoLogin />;
   }
 
-  const id = generateUUID();
+  const chatId = generateUUID();
 
   const cookieStore = await cookies();
-  const modelIdFromCookie = cookieStore.get('chat-model');
+  const modelIdFromCookie = cookieStore.get("chat-model");
 
   if (!modelIdFromCookie) {
     return (
       <>
         <Chat
-          key={id}
-          id={id}
+          key={chatId}
+          id={chatId}
           initialMessages={[]}
           initialChatModel={DEFAULT_CHAT_MODEL}
           initialVisibilityType="private"
@@ -38,7 +32,7 @@ export default async function Page() {
           session={session}
           autoResume={false}
         />
-        <DataStreamHandler id={id} />
+        <DataStreamHandler id={chatId} />
       </>
     );
   }
@@ -46,8 +40,8 @@ export default async function Page() {
   return (
     <>
       <Chat
-        key={id}
-        id={id}
+        key={chatId}
+        id={chatId}
         initialMessages={[]}
         initialChatModel={modelIdFromCookie.value}
         initialVisibilityType="private"
@@ -55,7 +49,7 @@ export default async function Page() {
         session={session}
         autoResume={false}
       />
-      <DataStreamHandler id={id} />
+      <DataStreamHandler id={chatId} />
     </>
   );
 }

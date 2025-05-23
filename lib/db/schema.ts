@@ -11,12 +11,16 @@ import {
   boolean,
   vector,
   index,
+  integer,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("User", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   email: varchar("email", { length: 64 }).notNull(),
   password: varchar("password", { length: 64 }),
+  type: varchar("type", { enum: ["user", "admin"] })
+    .notNull()
+    .default("user"),
 });
 
 export type User = InferSelectModel<typeof user>;
@@ -171,18 +175,26 @@ export const stream = pgTable(
 
 export type Stream = InferSelectModel<typeof stream>;
 
-export const resources = pgTable(
-  "Resources",
-  {
-    id: uuid("id").notNull().defaultRandom(),
-    content: text("content").notNull(),
-    createdAt: timestamp("createdAt").notNull(),
-    updatedAt: timestamp("updatedAt").notNull(),
-  },
-  (table) => ({
-    pk: primaryKey({ columns: [table.id] }),
-  })
-);
+export const resources = pgTable("Resources", {
+  id: uuid("id").notNull().defaultRandom().primaryKey(),
+  name: text("name").notNull(),
+  contentType: varchar("contentType", {
+    enum: ["text", "image", "video", "audio", "pdf"],
+  }).notNull(),
+  type: varchar("type", { enum: ["file", "url", "wordpress"] }).notNull(),
+  size: integer("size").notNull(),
+  url: text("url"),
+  content: text("content").notNull(),
+  contentSummary: text("contentSummary").notNull(),
+  createdAt: timestamp("createdAt").notNull(),
+  createdBy: uuid("createdBy")
+    .notNull()
+    .references(() => user.id),
+  updatedAt: timestamp("updatedAt").notNull(),
+  updatedBy: uuid("updatedBy")
+    .notNull()
+    .references(() => user.id),
+});
 
 export type NewResourceParams = InferSelectModel<typeof resources>;
 

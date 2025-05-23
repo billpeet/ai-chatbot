@@ -12,6 +12,7 @@ coverage
 .next/
 out/
 build
+public/uploads/
 
 # misc
 .DS_Store
