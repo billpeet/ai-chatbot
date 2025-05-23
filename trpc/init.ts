@@ -1,19 +1,27 @@
 import { initTRPC } from "@trpc/server";
 import { cache } from "react";
 import superjson from "superjson";
+import { auth } from "@/app/(auth)/auth";
 
-export const createTRPCContext = cache(async () => {
+interface Context {
+  userId: string;
+}
+
+export const createTRPCContext = cache(async (): Promise<Context> => {
   /**
    * @see: https://trpc.io/docs/server/context
    */
-  return { userId: "user_123" };
+  const session = await auth();
+  return {
+    userId: session?.user?.dbId ?? session?.user?.id ?? "anonymous",
+  };
 });
 
 // Avoid exporting the entire t-object
 // since it's not very descriptive.
 // For instance, the use of a t variable
 // is common in i18n libraries.
-const t = initTRPC.create({
+const t = initTRPC.context<Context>().create({
   /**
    * @see https://trpc.io/docs/server/data-transformers
    */

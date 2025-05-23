@@ -15,7 +15,7 @@ export type Document = {
   id: string;
   name: string;
   type: "file" | "url" | "wordpress";
-  contentType: "text" | "image" | "video" | "audio" | "pdf";
+  contentType: "text" | "image" | "video" | "audio" | "pdf" | "html";
   url: string | null;
   size: number;
   content: string;

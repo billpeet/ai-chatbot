@@ -34,7 +34,6 @@ import {
   embeddings,
 } from "./schema";
 import type { ArtifactKind } from "@/components/chat/artifacts/artifact";
-import { generateUUID } from "../utils";
 import { generateHashedPassword } from "./utils";
 import type { VisibilityType } from "@/components/chat/visibility-selector";
 import { ChatSDKError } from "../errors";
@@ -544,8 +543,8 @@ export async function createResource({
   contentSummary: string;
   name: string;
   url?: string;
-  contentType: string;
-  type: string;
+  contentType: "text" | "image" | "video" | "audio" | "pdf" | "html";
+  type: "file" | "url" | "wordpress";
   size: number;
   createdBy: string;
   updatedBy: string;
@@ -635,7 +634,13 @@ export async function getResources(pageNo: number, pageSize: number) {
       .from(resources)
       .limit(pageSize)
       .offset((pageNo - 1) * pageSize);
-    return items;
+    const totalCount = await db
+      .select({ count: count(resources.id) })
+      .from(resources);
+    return {
+      items,
+      totalCount: totalCount[0].count,
+    };
   } catch (error) {
     throw new ChatSDKError("bad_request:database", "Failed to get resources");
   }
@@ -643,7 +648,12 @@ export async function getResources(pageNo: number, pageSize: number) {
 
 export async function getResourceById(id: string) {
   try {
-    return await db.select().from(resources).where(eq(resources.id, id));
+    const [result] = await db
+      .select()
+      .from(resources)
+      .where(eq(resources.id, id))
+      .limit(1);
+    return result;
   } catch (error) {
     throw new ChatSDKError(
       "bad_request:database",
@@ -679,7 +689,13 @@ export async function getVotes(pageNo: number, pageSize: number) {
       .limit(pageSize)
       .offset((pageNo - 1) * pageSize)
       .orderBy(desc(message.createdAt));
-    return items;
+    const totalCount = await db
+      .select({ count: count(vote.messageId) })
+      .from(vote);
+    return {
+      items,
+      totalCount: totalCount[0].count,
+    };
   } catch (error) {
     throw new ChatSDKError("bad_request:database", "Failed to get votes");
   }

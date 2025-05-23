@@ -3,7 +3,13 @@
 // ^-- to make sure we can mount the Provider from a server component
 import type { QueryClient } from "@tanstack/react-query";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import {
+  createTRPCClient,
+  httpBatchLink,
+  httpSubscriptionLink,
+  loggerLink,
+  splitLink,
+} from "@trpc/client";
 import { createTRPCContext } from "@trpc/tanstack-react-query";
 import { useState } from "react";
 import { makeQueryClient } from "./query-client";
@@ -27,13 +33,14 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
+function getBaseUrl() {
+  if (typeof window !== "undefined") return "";
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return "http://localhost:3000";
+}
+
 function getUrl() {
-  const base = (() => {
-    if (typeof window !== "undefined") return "";
-    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-    return "http://localhost:3000";
-  })();
-  return `${base}/api/trpc`;
+  return `${getBaseUrl()}/api/trpc`;
 }
 
 export function TRPCReactProvider(
@@ -41,22 +48,28 @@ export function TRPCReactProvider(
     children: React.ReactNode;
   }>
 ) {
-  // NOTE: Avoid useState when initializing the query client if you don't
-  //       have a suspense boundary between this and the code that may
-  //       suspend because React will throw away the client on the initial
-  //       render if it suspends and there is no boundary
   const queryClient = getQueryClient();
 
   const [trpcClient] = useState(() =>
     createTRPCClient<AppRouter>({
       links: [
-        httpBatchLink({
-          transformer: superjson,
-          url: getUrl(),
+        loggerLink(),
+        splitLink({
+          // uses the httpSubscriptionLink for subscriptions
+          condition: (op) => op.type === "subscription",
+          true: httpSubscriptionLink({
+            url: getUrl(),
+            transformer: superjson,
+          }),
+          false: httpBatchLink({
+            url: getUrl(),
+            transformer: superjson,
+          }),
         }),
       ],
     })
   );
+
   return (
     <QueryClientProvider client={queryClient}>
       <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>

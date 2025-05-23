@@ -10,10 +10,8 @@ import {
 } from "../db/queries";
 import { generateText } from "ai";
 import { myProvider } from "../ai/providers";
-import { auth } from "@/app/(auth)/auth";
-import path from "path";
-import { existsSync } from "fs";
-import { unlinkSync } from "fs";
+import path from "node:path";
+import { existsSync, unlinkSync } from "node:fs";
 
 const insertResourceSchema = z.object({
   content: z
@@ -21,43 +19,18 @@ const insertResourceSchema = z.object({
     .describe("The content of the resource to add to the knowledge base"),
   name: z.string().describe("The name of the resource"),
   url: z.string().describe("The url of the resource").optional(),
-  type: z.string().describe("The type of the resource"),
-  contentType: z.string().describe("The content type of the resource"),
+  type: z
+    .enum(["file", "url", "wordpress"])
+    .describe("The type of the resource"),
+  contentType: z
+    .enum(["text", "image", "video", "audio", "pdf", "html"])
+    .describe("The content type of the resource"),
   createdBy: z.string().describe("The user who created the resource"),
   updatedBy: z.string().describe("The user who updated the resource"),
 });
 
 // Type for resources - used to type API request params and within Components
 export type NewResourceParams = z.infer<typeof insertResourceSchema>;
-
-const addDocumentAsResourceSchema = z.object({
-  document: z.instanceof(File),
-});
-
-export const addDocumentAsResource = async (input: NewResourceParams) => {
-  const session = await auth();
-
-  if (!session?.user) {
-    throw new Error("Unauthorized");
-  }
-
-  const { document } = addDocumentAsResourceSchema.parse(input);
-
-  const content = await document.text();
-  const name = document.name;
-  const contentType = document.type;
-  const createdBy = session.user.id;
-  const updatedBy = session.user.id;
-
-  return await createResourceAndEmbedding({
-    content,
-    name,
-    contentType,
-    type: "file",
-    createdBy,
-    updatedBy,
-  });
-};
 
 export const createResourceAndEmbedding = async (input: NewResourceParams) => {
   try {

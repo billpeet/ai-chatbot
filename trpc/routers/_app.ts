@@ -2,6 +2,7 @@ import { z } from "zod";
 import { baseProcedure, createTRPCRouter } from "../init";
 import { resourcesRouter } from "../routers/resources";
 import { votesRouter } from "../routers/votes";
+import { crawlRouter } from "../routers/crawl";
 
 export const appRouter = createTRPCRouter({
   hello: baseProcedure
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
     }),
   resources: resourcesRouter,
   votes: votesRouter,
+  crawl: crawlRouter,
 });
 
 // export type definition of API

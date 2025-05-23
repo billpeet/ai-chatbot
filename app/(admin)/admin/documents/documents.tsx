@@ -5,6 +5,7 @@ import { useTRPC } from "@/trpc/client";
 import { DataTable } from "@/components/admin/documents/data-table";
 import { columns } from "@/components/admin/documents/columns";
 import { UploadButton } from "@/components/admin/documents/upload-button";
+import { CrawlButton } from "@/components/admin/documents/crawl-button";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 
@@ -37,6 +38,7 @@ export default function Documents() {
             />
             Refresh
           </Button>
+          <CrawlButton />
           <UploadButton />
         </div>
       </div>
@@ -44,7 +46,8 @@ export default function Documents() {
         columns={columns({
           deleteResource: (id) => deleteResource.mutate({ id }),
         })}
-        data={data || []}
+        data={data?.items || []}
+        totalCount={data?.totalCount || 0}
       />
     </div>
   );

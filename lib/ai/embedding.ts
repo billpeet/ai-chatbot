@@ -11,10 +11,48 @@ import { myProvider } from "./providers";
 const embeddingModel = openai.embedding("text-embedding-ada-002");
 
 const generateChunks = (input: string): string[] => {
-  return input
+  const maxChunkSize = 1000;
+  const chunks: string[] = [];
+  let currentChunk = "";
+
+  // Split into sentences first
+  const sentences = input
     .trim()
     .split(".")
-    .filter((i) => i !== "");
+    .filter((s) => s.trim());
+
+  for (const sentence of sentences) {
+    // If adding this sentence would exceed chunk size and we already have content,
+    // start a new chunk
+    if (
+      currentChunk.length + sentence.length > maxChunkSize &&
+      currentChunk.length > 0
+    ) {
+      chunks.push(currentChunk.trim());
+      currentChunk = "";
+    }
+
+    // If a single sentence is longer than chunk size, force split it
+    if (sentence.length > maxChunkSize) {
+      if (currentChunk.length > 0) {
+        chunks.push(currentChunk.trim());
+        currentChunk = "";
+      }
+      // Split long sentence into maxChunkSize pieces
+      for (let i = 0; i < sentence.length; i += maxChunkSize) {
+        chunks.push(sentence.slice(i, i + maxChunkSize).trim());
+      }
+    } else {
+      currentChunk += sentence + ".";
+    }
+  }
+
+  // Add any remaining content
+  if (currentChunk.length > 0) {
+    chunks.push(currentChunk.trim());
+  }
+
+  return chunks;
 };
 
 export const generateEmbeddings = async (value: string) => {

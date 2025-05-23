@@ -179,7 +179,7 @@ export const resources = pgTable("Resources", {
   id: uuid("id").notNull().defaultRandom().primaryKey(),
   name: text("name").notNull(),
   contentType: varchar("contentType", {
-    enum: ["text", "image", "video", "audio", "pdf"],
+    enum: ["text", "image", "video", "audio", "pdf", "html"],
   }).notNull(),
   type: varchar("type", { enum: ["file", "url", "wordpress"] }).notNull(),
   size: integer("size").notNull(),

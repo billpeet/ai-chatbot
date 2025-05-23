@@ -1,14 +1,14 @@
 "use client";
 
 import {
-  ColumnDef,
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
   getPaginationRowModel,
-  SortingState,
+  type SortingState,
   getSortedRowModel,
-  ColumnFiltersState,
+  type ColumnFiltersState,
   getFilteredRowModel,
 } from "@tanstack/react-table";
 import {
@@ -20,7 +20,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { deleteResourceAndFiles } from "@/lib/actions/resources";
 import { useQueryClient } from "@tanstack/react-query";
@@ -29,11 +28,13 @@ import { toast } from "sonner";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  totalCount: number;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  totalCount,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -57,6 +58,7 @@ export function DataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
+    rowCount: totalCount,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -134,7 +136,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center space-x-2 py-4">
         <Button
           variant="outline"
           size="sm"

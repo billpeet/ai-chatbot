@@ -5,22 +5,26 @@ import pdfParse from "pdf-parse";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
+import mammoth from "mammoth";
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
     const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const formData = await request.formData();
+    if (session.user.type !== "admin") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+    const formData = await req.formData();
     const file = formData.get("file") as File;
+    const name = file.name;
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
     let content: string;
-    const name = file.name;
     const contentType = file.type;
     const createdBy = session.user.dbId ?? session.user.id;
     const updatedBy = session.user.dbId ?? session.user.id;
@@ -40,10 +44,18 @@ export async function POST(request: Request) {
     // Create the public URL for the file
     const fileUrl = `/uploads/${name}`;
 
-    // Handle PDF files
+    // Handle different file types
     if (contentType === "application/pdf") {
       const pdfData = await pdfParse(buffer);
       content = pdfData.text;
+    } else if (
+      contentType ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      contentType === "application/msword"
+    ) {
+      // Handle Word documents
+      const result = await mammoth.extractRawText({ buffer });
+      content = result.value;
     } else {
       // Handle text files
       content = buffer.toString("utf-8");
@@ -52,9 +64,9 @@ export async function POST(request: Request) {
     const result = await createResourceAndEmbedding({
       content,
       name,
+      url: fileUrl,
       contentType,
       type: "file",
-      url: fileUrl,
       createdBy,
       updatedBy,
     });
@@ -69,9 +81,9 @@ export async function POST(request: Request) {
       fileUrl,
     });
   } catch (error) {
-    console.error("Error uploading file:", error);
+    console.error("Error processing document:", error);
     return NextResponse.json(
-      { error: "Failed to upload file" },
+      { error: "Failed to process document" },
       { status: 500 }
     );
   }
