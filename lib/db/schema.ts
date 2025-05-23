@@ -184,6 +184,7 @@ export const resources = pgTable("Resources", {
   type: varchar("type", { enum: ["file", "url", "wordpress"] }).notNull(),
   size: integer("size").notNull(),
   url: text("url"),
+  baseUrl: text("baseUrl"),
   content: text("content").notNull(),
   contentSummary: text("contentSummary").notNull(),
   createdAt: timestamp("createdAt").notNull(),

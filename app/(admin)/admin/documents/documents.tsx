@@ -3,7 +3,7 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import { DataTable } from "@/components/admin/documents/data-table";
-import { columns } from "@/components/admin/documents/columns";
+import { columns, type Document } from "@/components/admin/documents/columns";
 import { UploadButton } from "@/components/admin/documents/upload-button";
 import { CrawlButton } from "@/components/admin/documents/crawl-button";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,22 @@ export default function Documents() {
       },
     })
   );
+
+  const deleteResourceByBaseUrl = useMutation(
+    trpc.resources.deleteResourceByBaseUrl.mutationOptions({
+      onSuccess: () => {
+        refetch();
+      },
+    })
+  );
+
+  const handleDeleteResource = (doc: Document) => {
+    if (doc.id) {
+      deleteResource.mutate({ id: doc.id });
+    } else if (doc.baseUrl) {
+      deleteResourceByBaseUrl.mutate({ baseUrl: doc.baseUrl });
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -44,7 +60,7 @@ export default function Documents() {
       </div>
       <DataTable
         columns={columns({
-          deleteResource: (id) => deleteResource.mutate({ id }),
+          deleteResource: handleDeleteResource,
         })}
         data={data?.items || []}
         totalCount={data?.totalCount || 0}

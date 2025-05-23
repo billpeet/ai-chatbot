@@ -10,7 +10,13 @@ import {
   gt,
   gte,
   inArray,
+  isNotNull,
+  isNull,
   lt,
+  max,
+  min,
+  ne,
+  or,
   sql,
   type SQL,
 } from "drizzle-orm";
@@ -533,6 +539,7 @@ export async function createResource({
   contentSummary,
   name,
   url,
+  baseUrl,
   contentType,
   type,
   size,
@@ -543,6 +550,7 @@ export async function createResource({
   contentSummary: string;
   name: string;
   url?: string;
+  baseUrl?: string;
   contentType: "text" | "image" | "video" | "audio" | "pdf" | "html";
   type: "file" | "url" | "wordpress";
   size: number;
@@ -557,6 +565,7 @@ export async function createResource({
         contentSummary,
         name,
         url,
+        baseUrl,
         contentType,
         type,
         size,
@@ -593,6 +602,7 @@ export async function createEmbeddings(
 
     return await db.insert(embeddingsTable).values(embeddings);
   } catch (error) {
+    console.error(error);
     throw new ChatSDKError(
       "bad_request:database",
       "Failed to create embedding"
@@ -620,6 +630,7 @@ export async function getRelevantResources(
       .orderBy(desc(similarity))
       .limit(count);
   } catch (error) {
+    console.error(error);
     throw new ChatSDKError(
       "bad_request:database",
       "Failed to get relevant resources"
@@ -629,19 +640,63 @@ export async function getRelevantResources(
 
 export async function getResources(pageNo: number, pageSize: number) {
   try {
-    const items = await db
-      .select()
+    // Get items with baseUrl
+    const groupedItems = await db
+      .select({
+        baseUrl: resources.baseUrl,
+        url: min(resources.url),
+        name: min(resources.name),
+        type: min(resources.type),
+        contentType: min(resources.contentType),
+        contentSummary: min(resources.contentSummary),
+        count: count(resources.id),
+        size: min(resources.size),
+        createdAt: min(resources.createdAt),
+        updatedAt: min(resources.updatedAt),
+      })
       .from(resources)
+      .where(and(isNotNull(resources.baseUrl), eq(resources.type, "url")))
       .limit(pageSize)
+      .offset((pageNo - 1) * pageSize)
+      .groupBy(resources.baseUrl);
+
+    // Get items without baseUrl
+    const ungroupedItems = await db
+      .select({
+        baseUrl: resources.baseUrl,
+        url: resources.url,
+        name: resources.name,
+        type: resources.type,
+        contentType: resources.contentType,
+        contentSummary: resources.contentSummary,
+        count: sql<number>`1`,
+        size: resources.size,
+        createdAt: resources.createdAt,
+        updatedAt: resources.updatedAt,
+      })
+      .from(resources)
+      .where(or(isNull(resources.baseUrl), ne(resources.type, "url")))
+      .limit(Math.max(0, pageSize - groupedItems.length))
       .offset((pageNo - 1) * pageSize);
-    const totalCount = await db
+
+    // Get total counts
+    const [groupedCount] = await db
       .select({ count: count(resources.id) })
-      .from(resources);
+      .from(resources)
+      .where(isNotNull(resources.baseUrl))
+      .groupBy(resources.baseUrl);
+
+    const [ungroupedCount] = await db
+      .select({ count: count(resources.id) })
+      .from(resources)
+      .where(isNull(resources.baseUrl));
+
     return {
-      items,
-      totalCount: totalCount[0].count,
+      items: [...groupedItems, ...ungroupedItems],
+      totalCount: groupedCount?.count ?? 0 + ungroupedCount?.count ?? 0,
     };
   } catch (error) {
+    console.error(error);
     throw new ChatSDKError("bad_request:database", "Failed to get resources");
   }
 }
@@ -655,9 +710,25 @@ export async function getResourceById(id: string) {
       .limit(1);
     return result;
   } catch (error) {
+    console.error(error);
     throw new ChatSDKError(
       "bad_request:database",
       "Failed to get resource by id"
+    );
+  }
+}
+
+export async function getResourcesByBaseUrl(baseUrl: string) {
+  try {
+    return await db
+      .select({ id: resources.id, url: resources.url })
+      .from(resources)
+      .where(eq(resources.baseUrl, baseUrl));
+  } catch (error) {
+    console.error(error);
+    throw new ChatSDKError(
+      "bad_request:database",
+      "Failed to get resources by base url"
     );
   }
 }
@@ -666,6 +737,7 @@ export async function deleteResource(id: string) {
   try {
     return await db.delete(resources).where(eq(resources.id, id));
   } catch (error) {
+    console.error(error);
     throw new ChatSDKError("bad_request:database", "Failed to delete resource");
   }
 }
@@ -697,6 +769,7 @@ export async function getVotes(pageNo: number, pageSize: number) {
       totalCount: totalCount[0].count,
     };
   } catch (error) {
+    console.error(error);
     throw new ChatSDKError("bad_request:database", "Failed to get votes");
   }
 }

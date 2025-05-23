@@ -1,6 +1,6 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, ExternalLink, MoreHorizontal } from "lucide-react";
 import {
@@ -12,24 +12,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export type Document = {
-  id: string;
-  name: string;
-  type: "file" | "url" | "wordpress";
-  contentType: "text" | "image" | "video" | "audio" | "pdf" | "html";
+  id?: string;
+  baseUrl?: string | null;
+  name: string | null;
+  type: "file" | "url" | "wordpress" | null;
+  contentType: "text" | "image" | "video" | "audio" | "pdf" | "html" | null;
   url: string | null;
-  size: number;
-  content: string;
-  contentSummary: string;
-  createdAt: Date;
-  createdBy: string;
-  updatedAt: Date;
-  updatedBy: string;
+  size: number | null;
+  contentSummary: string | null;
+  count: number;
+  createdAt: Date | null;
+  updatedAt: Date | null;
 };
 
 export const columns = ({
   deleteResource,
 }: {
-  deleteResource: (id: string) => void | Promise<void>;
+  deleteResource: (doc: Document) => void | Promise<void>;
 }): ColumnDef<Document>[] => {
   return [
     {
@@ -49,13 +48,20 @@ export const columns = ({
         const name = row.getValue("name") as string;
         const url = row.original.url;
         return (
-          <div className="flex items-center gap-2">
-            {name}
-            {url && (
-              <ExternalLink
-                className="size-4 cursor-pointer"
-                onClick={() => window.open(url, "_blank")}
-              />
+          <div>
+            <div className="flex items-center gap-2">
+              {name}
+              {url && (
+                <ExternalLink
+                  className="size-4 cursor-pointer"
+                  onClick={() => window.open(url, "_blank")}
+                />
+              )}
+            </div>
+            {row.original.count > 1 && (
+              <span className="text-sm text-gray-500">
+                ({row.original.count} pages)
+              </span>
             )}
           </div>
         );
@@ -127,13 +133,8 @@ export const columns = ({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(document.id)}
-              >
-                Copy document ID
-              </DropdownMenuItem>
               <DropdownMenuItem>View details</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => deleteResource(document.id)}>
+              <DropdownMenuItem onClick={() => deleteResource(document)}>
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>

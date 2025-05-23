@@ -7,6 +7,7 @@ import {
   createResource,
   deleteResource,
   getResourceById,
+  getResourcesByBaseUrl,
 } from "../db/queries";
 import { generateText } from "ai";
 import { myProvider } from "../ai/providers";
@@ -19,6 +20,7 @@ const insertResourceSchema = z.object({
     .describe("The content of the resource to add to the knowledge base"),
   name: z.string().describe("The name of the resource"),
   url: z.string().describe("The url of the resource").optional(),
+  baseUrl: z.string().describe("The base url of the resource").optional(),
   type: z
     .enum(["file", "url", "wordpress"])
     .describe("The type of the resource"),
@@ -34,8 +36,16 @@ export type NewResourceParams = z.infer<typeof insertResourceSchema>;
 
 export const createResourceAndEmbedding = async (input: NewResourceParams) => {
   try {
-    const { content, name, url, contentType, type, createdBy, updatedBy } =
-      insertResourceSchema.parse(input);
+    const {
+      content,
+      name,
+      url,
+      baseUrl,
+      contentType,
+      type,
+      createdBy,
+      updatedBy,
+    } = insertResourceSchema.parse(input);
 
     const contentSummary = await generateContentSummary(content);
 
@@ -45,6 +55,7 @@ export const createResourceAndEmbedding = async (input: NewResourceParams) => {
       name,
       contentType,
       url,
+      baseUrl,
       type,
       size: content.length,
       createdBy,
@@ -103,6 +114,20 @@ export const deleteResourceAndFiles = async (id: string) => {
     if (existsSync(filePath)) {
       unlinkSync(filePath);
     }
+  }
+
+  return { success: true };
+};
+
+export const deleteResourceByBaseUrl = async (baseUrl: string) => {
+  const resources = await getResourcesByBaseUrl(baseUrl);
+
+  if (!resources?.length) {
+    throw new Error("Resource not found");
+  }
+
+  for (const resource of resources) {
+    await deleteResource(resource.id);
   }
 
   return { success: true };

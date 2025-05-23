@@ -142,6 +142,7 @@ export class WebCrawler {
           content: page.content,
           name: page.title,
           url: page.url,
+          baseUrl: this.baseUrl,
           contentType: "text",
           type: "url",
           createdBy: this.createdBy,

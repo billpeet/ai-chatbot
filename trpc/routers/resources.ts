@@ -1,7 +1,10 @@
 import { getResources } from "@/lib/db/queries";
 import { baseProcedure, createTRPCRouter } from "../init";
 import { z } from "zod";
-import { deleteResourceAndFiles } from "@/lib/actions/resources";
+import {
+  deleteResourceAndFiles,
+  deleteResourceByBaseUrl,
+} from "@/lib/actions/resources";
 
 export const resourcesRouter = createTRPCRouter({
   resources: baseProcedure
@@ -22,6 +25,12 @@ export const resourcesRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) => {
       const result = await deleteResourceAndFiles(input.id);
+      return result;
+    }),
+  deleteResourceByBaseUrl: baseProcedure
+    .input(z.object({ baseUrl: z.string() }))
+    .mutation(async ({ input }) => {
+      const result = await deleteResourceByBaseUrl(input.baseUrl);
       return result;
     }),
 });
