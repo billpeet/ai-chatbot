@@ -1,8 +1,9 @@
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import { ExternalLink, ThumbsDownIcon, ThumbsUpIcon } from "lucide-react";
+
 export type Vote = {
   messageId: string;
-  parts: any[];
+  parts: unknown;
   chatId: string;
   chatTitle: string;
   userId: string;
@@ -10,7 +11,7 @@ export type Vote = {
   isUpvoted: boolean;
 };
 
-export const columns = (): ColumnDef<Vote, unknown>[] => [
+export const columns = (): ColumnDef<Vote>[] => [
   {
     accessorKey: "isUpvoted",
     header: "Vote Type",
@@ -45,9 +46,10 @@ export const columns = (): ColumnDef<Vote, unknown>[] => [
     accessorKey: "messageContent",
     header: "Message",
     cell: ({ row }) => {
-      const messageContent = row.original.parts
-        ?.map((part: any) => part.text)
-        .join("");
+      const parts = row.original.parts;
+      const messageContent = Array.isArray(parts)
+        ? parts.map((part: any) => part.text).join("")
+        : "";
       return <div>{messageContent}</div>;
     },
   },

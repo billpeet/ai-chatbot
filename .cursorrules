@@ -1,3 +1,16 @@
+## General
+1. This app is a chatbot with RAG and tool use.
+
+## Tech stack
+1. NextJS
+1. Tailwind CSS
+1. shadcn
+1. pnpm
+1. trpc
+1. Drizzle ORM
+1. Postgres
+
+## Guidelines
 1. Use trpc to all api methods
 1. Use shadcn/tailwind css for ui
 1. Use pnpm for package management

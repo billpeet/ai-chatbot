@@ -2,9 +2,9 @@ import { auth } from "@/app/(auth)/auth";
 import { createResourceAndEmbedding } from "@/lib/actions/resources";
 import { NextResponse } from "next/server";
 import pdfParse from "pdf-parse";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
-import { existsSync } from "fs";
+import { writeFile, mkdir } from "node:fs/promises";
+import { join } from "node:path";
+import { existsSync } from "node:fs";
 import mammoth from "mammoth";
 
 export async function POST(req: Request) {
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
       content,
       name,
       url: fileUrl,
-      contentType,
+      contentType: "pdf" as const,
       type: "file",
       createdBy,
       updatedBy,

@@ -30,7 +30,7 @@ export default function Votes() {
           </Button>
         </div>
       </div>
-      <DataTable columns={columns()} data={data || []} />
+      <DataTable columns={columns()} data={data?.items || []} />
     </div>
   );
 }

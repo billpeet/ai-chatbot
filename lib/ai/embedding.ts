@@ -43,7 +43,7 @@ const generateChunks = (input: string): string[] => {
         chunks.push(sentence.slice(i, i + maxChunkSize).trim());
       }
     } else {
-      currentChunk += sentence + ".";
+      currentChunk += `${sentence}.`;
     }
   }
 
@@ -93,8 +93,12 @@ const insertResourceSchema = z.object({
     .describe("The content of the resource to add to the knowledge base"),
   name: z.string().describe("The name of the resource"),
   url: z.string().describe("The url of the resource").optional(),
-  type: z.string().describe("The type of the resource"),
-  contentType: z.string().describe("The content type of the resource"),
+  type: z
+    .enum(["url", "file", "wordpress"])
+    .describe("The type of the resource"),
+  contentType: z
+    .enum(["text", "pdf", "html", "image", "audio", "video"])
+    .describe("The content type of the resource"),
   createdBy: z.string().describe("The user who created the resource"),
   updatedBy: z.string().describe("The user who updated the resource"),
 });
