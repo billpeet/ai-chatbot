@@ -166,7 +166,6 @@ function PureMultimodalInput({
     width,
     chatId,
     pendingFiles,
-    pendingFileUrls,
   ]);
 
   // Cleanup object URLs when component unmounts or files change
