@@ -47,7 +47,8 @@ export const createResourceAndEmbedding = async (input: NewResourceParams) => {
       updatedBy,
     } = insertResourceSchema.parse(input);
 
-    const contentSummary = await generateContentSummary(content);
+    // Generate AI summary of the content
+    const contentSummary = await generateContentSummary(content.slice(0, 1000));
 
     const [resource] = await createResource({
       content,
